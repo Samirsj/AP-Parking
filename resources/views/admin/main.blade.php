@@ -1,40 +1,69 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Connecté en tant que admin') }}
-        </h2>
-        <br>
-        <a href="/admin/create">
-                <x-primary-button class="mr-2">
-                    {{ __('Ajouter des utilisateurs') }}
-                </x-primary-button>
-            </a>
-    </x-slot>
+@extends('/layouts.Layout')
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
-                <table class="min-w-full table-auto">
-                            <thead>
-                                <tr>
-                                    <th class="px-4 py-2 text-center text-black">Nom</th>
-                                    <th class="px-4 py-2 text-center text-black">Prenom</th>
-                                    <th class="px-4 py-2 text-center text-black">e-mail</th>
-                                    <th class="px-4 py-2 text-center text-black">Role</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($users as $user)
-                                <tr class="text-center">
-                                    <td class="px-4 py-2 text-left text-black">{{ $user->last_name }}</td>
-                                    <td class="px-4 py-2 text-left text-black">{{ $user->first_name }}</td>
-                                    <td class="px-4 py-2 text-left text-black">{{ $user->email }}</td>
-                                </tr>
-                                @endforeach
-                               
-                </div>
+@section('nom')
+    <div class="text-center text-2xl font-bold mt-6">
+        {{ __('Connecté en tant que admin') }}
+    </div>
+@endsection
+
+@section('bouton')
+    <div class="flex justify-center mt-4">
+        <a href="{{ route('admin.create') }}">
+            <x-primary-button class="px-4 py-2">
+                {{ __('Ajouter un utilisateur') }}
+            </x-primary-button>
+        </a>
+    </div>
+@endsection
+
+@section('container')
+    <!-- Conteneur pour centrer le tableau -->
+    <div class="flex justify-center mt-8">
+        <div class="w-full max-w-5xl"> <!-- Largeur limitée pour bien centrer -->
+            <table class="w-full border border-gray-300 rounded-lg shadow-md bg-white">
+                <thead class="bg-gray-100">
+                    <tr>
+                        <th class="px-4 py-3 text-center text-black">Nom</th>
+                        <th class="px-4 py-3 text-center text-black">E-mail</th>
+                        <th class="px-4 py-3 text-center text-black">Rôle</th>
+                        <th class="px-4 py-3 text-center text-black">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($users as $user)
+                        <tr class="text-center border-b border-gray-200">
+                            <td class="px-4 py-3">{{ $user->name }}</td>
+                            <td class="px-4 py-3">{{ $user->email }}</td>
+                            <td class="px-4 py-3">
+                                @if($user->admin)
+                                    <span class="text-purple-700 font-bold">Admin</span>
+                                @else
+                                    <span class="text-gray-700">Utilisateur</span>
+                                @endif
+                            </td>
+                            <td class="px-4 py-3 flex justify-center space-x-6"> <!-- Ajout de space-x-6 pour espacer -->
+                                <a href="{{ route('admin.edit', $user->id) }}" class="text-blue-600 hover:text-blue-900">
+                                    Modifier
+                                </a>
+                                <form action="{{ route('admin.destroy', $user) }}" method="POST" onsubmit="return confirm('Voulez-vous vraiment supprimer cet utilisateur ?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="text-red-600 hover:text-red-900 ml-4"> <!-- Ajout de ml-4 pour espace -->
+                                        Supprimer
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+
+            <!-- PAGINATION centrée -->
+            <div class="mt-4 text-center">
+                @if($users instanceof \Illuminate\Pagination\LengthAwarePaginator)
+                    <div class="mb-4">{{ $users->links() }}</div> <!-- Ajout d'un espace en dessous du texte -->
+                @endif
             </div>
         </div>
     </div>
-</x-app-layout>
+@endsection

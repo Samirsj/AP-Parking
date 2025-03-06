@@ -6,70 +6,90 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
-class adminController extends Controller
+class AdminController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Affiche la liste des utilisateurs
      */
     public function index()
     {
-        if(Auth::user()->can('viewAny' , User::class)){
-            $users = User::all();
-            return view('admin.main' , compact('users'));
+        if (Auth::user()->can('viewAny', User::class)) {
+            $users = User::paginate(10); // Ajout de la pagination
+            return view('admin.main', compact('users'));
         }
-        else return redirect('/');
+        return redirect('/');
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Affiche le formulaire pour créer un nouvel utilisateur
      */
     public function create()
     {
-        dd('ok');
-        if(Auth::user()->can('creerUser' , User::class) || true){
-            return view('admin.createUser');
-        }
-        else return redirect()->back();
+        return view('admin.createUser');
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Stocke un nouvel utilisateur
      */
     public function store(Request $request)
     {
-        //
+        // Validation des données du formulaire
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|string|min:6',
+        ]);
+    
+        // Création de l'utilisateur
+        User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => bcrypt($request->password), // Hachage du mot de passe
+            'admin' => $request->has('admin') ? 1 : 0,
+        ]);
+    
+        // Redirection avec un message de succès
+        return redirect()->route('admin.index')->with('success', 'Utilisateur ajouté avec succès !');
     }
-
+    
     /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
+     * Affiche le formulaire d'édition d'un utilisateur
      */
     public function edit($id)
     {
         $user = User::findOrFail($id);
-        return view('admin.users.edit', compact('user'));   
+        return view('admin.edit', compact('user'));
     }
 
     /**
-     * Update the specified resource in storage.
+     * Met à jour un utilisateur existant
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        //
+        $user = User::findOrFail($id);
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $user->id,
+        ]);
+
+        $user->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'role' => $request->role,
+        ]);
+
+        return redirect()->route('admin.index')->with('success', 'Utilisateur mis à jour avec succès.');
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Supprime un utilisateur
      */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        //
+        $user = User::findOrFail($id);
+        $user->delete();
+
+        return redirect()->route('admin.index')->with('success', 'Utilisateur supprimé avec succès.');
     }
 }

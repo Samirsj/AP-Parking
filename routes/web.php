@@ -35,6 +35,9 @@ Route::get('/register', [RegisteredUserController::class, 'create'])->name('regi
 Route::post('/register', [RegisteredUserController::class, 'store']);
 
 
-Route::resource('/admin' ,adminController::class);
+
+Route::middleware(['auth'])->group(function () {
+    Route::resource('admin', AdminController::class)->middleware('can:viewAny,App\Models\User');
+});
 
 require __DIR__.'/auth.php';
