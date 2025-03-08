@@ -43,8 +43,18 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('parking', ParkingController::class)
         ->middleware('can:viewAny,App\Models\Parking');
 
-    // Gestion de la liste d'attente
-    Route::resource('attente', AttenteController::class);
+        Route::middleware(['auth'])->group(function () {
+            Route::resource('attente', AttenteController::class);
+        
+            // Route pour mettre à jour la position dans la file d'attente
+            Route::post('/attente/{id}/update-position', [AttenteController::class, 'updatePosition'])
+                ->name('attente.updatePosition');
+        });
+        
+        Route::middleware(['auth'])->group(function () {
+            Route::resource('historique', HistoriqueController::class);
+        });
+        
 
     // Gestion de l'historique des attributions
     Route::resource('historique', HistoriqueController::class);

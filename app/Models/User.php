@@ -37,6 +37,10 @@ class User extends Authenticatable
         return $this->admin == 1;
     }
 
+    public function listAttente()
+    {
+        return $this->hasOne(ListAttente::class, 'user_id');
+    }
     /**
      * The attributes that should be cast.
      *
