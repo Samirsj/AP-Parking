@@ -15,6 +15,11 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
+
+                    <!-- Gestion des utilisateurs -->
+                    <x-nav-link :href="route('admin.index')" :active="request()->routeIs('admin.*')">
+                        {{ __('Gestion des utilisateurs') }}
+                    </x-nav-link>
                 </div>
             </div>
 
@@ -69,6 +74,11 @@
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
+            </x-responsive-nav-link>
+
+            <!-- Gestion des utilisateurs (Mobile) -->
+            <x-responsive-nav-link :href="route('admin.index')" :active="request()->routeIs('admin.*')">
+                {{ __('Gestion des utilisateurs') }}
             </x-responsive-nav-link>
         </div>
 

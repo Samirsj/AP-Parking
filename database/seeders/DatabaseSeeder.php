@@ -2,8 +2,9 @@
 
 namespace Database\Seeders;
 
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
+use App\Models\User;
 
 class DatabaseSeeder extends Seeder
 {
@@ -12,13 +13,15 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-         \App\Models\User::factory(5)->create();
+        // Création de 5 utilisateurs aléatoires
+        User::factory(5)->create();
 
-         \App\Models\User::factory()->create([
-             'name' => 't',
-             'email' => 't@t',
-             'password' => a,
-             'admin' => '1',
-     ]);
+        // Création d'un administrateur
+        User::factory()->create([
+            'name' => 't',
+            'email' => 't@t',
+            'password' => 'a', 
+            'admin' => true, // Assurez-vous que la colonne admin est un booléen
+        ]);
     }
 }
