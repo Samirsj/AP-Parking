@@ -16,11 +16,15 @@
     </div>
 @endsection
 
-@section('container')
-    <!-- Conteneur pour centrer le tableau -->
-    <div class="flex justify-center mt-8">
-        <div class="w-full max-w-5xl"> <!-- Largeur limitée pour bien centrer -->
-            <table class="w-full border border-gray-300 rounded-lg shadow-md bg-white">
+@section('content')
+  <!-- Tableau des utilisateurs -->
+  <div class="text-center mb-6 mt-6">
+        <h1 class="text-3xl font-bold text-gray-800">Liste des Utilisateurs</h1>
+    </div>
+
+    <div class="flex justify-center">
+        <div class="w-full max-w-4xl bg-white p-6 rounded-lg shadow-md">
+            <table class="w-full border border-gray-300 rounded-lg">
                 <thead class="bg-gray-100">
                     <tr>
                         <th class="px-4 py-3 text-center text-black">Nom</th>
@@ -30,7 +34,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($users as $user)
+                    @forelse($users as $user)
                         <tr class="text-center border-b border-gray-200">
                             <td class="px-4 py-3">{{ $user->name }}</td>
                             <td class="px-4 py-3">{{ $user->email }}</td>
@@ -41,28 +45,30 @@
                                     <span class="text-gray-700">Utilisateur</span>
                                 @endif
                             </td>
-                            <td class="px-4 py-3 flex justify-center space-x-6"> <!-- Ajout de space-x-6 pour espacer -->
+                            <td class="px-4 py-3 flex justify-center space-x-6">
                                 <a href="{{ route('admin.edit', $user->id) }}" class="text-blue-600 hover:text-blue-900">
                                     Modifier
                                 </a>
-                                <form action="{{ route('admin.destroy', $user) }}" method="POST" onsubmit="return confirm('Voulez-vous vraiment supprimer cet utilisateur ?');">
+                                <form action="{{ route('admin.destroy', $user->id) }}" method="POST" onsubmit="return confirm('Voulez-vous vraiment supprimer cet utilisateur ?');">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="text-red-600 hover:text-red-900 ml-4"> <!-- Ajout de ml-4 pour espace -->
+                                    <button type="submit" class="text-red-600 hover:text-red-900 ml-4">
                                         Supprimer
                                     </button>
                                 </form>
                             </td>
                         </tr>
-                    @endforeach
+                    @empty
+                        <tr>
+                            <td colspan="4" class="text-center py-4">Aucun utilisateur trouvé.</td>
+                        </tr>
+                    @endforelse
                 </tbody>
             </table>
 
             <!-- PAGINATION centrée -->
             <div class="mt-4 text-center">
-                @if($users instanceof \Illuminate\Pagination\LengthAwarePaginator)
-                    <div class="mb-4">{{ $users->links() }}</div> <!-- Ajout d'un espace en dessous du texte -->
-                @endif
+                {{ $users->links() }}
             </div>
         </div>
     </div>

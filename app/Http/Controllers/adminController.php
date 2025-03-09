@@ -15,10 +15,11 @@ class AdminController extends Controller
     {
         if (Auth::user()->can('viewAny', User::class)) {
             $users = User::paginate(10); // Ajout de la pagination
-            return view('admin.main', compact('users'));
+            return view('admin.main', compact('users')); // ✅ Correction ici
         }
         return redirect('/');
     }
+    
 
     /**
      * Affiche le formulaire pour créer un nouvel utilisateur

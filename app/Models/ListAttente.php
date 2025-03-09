@@ -9,16 +9,15 @@ class ListAttente extends Model
 {
     use HasFactory;
 
-    protected $table = 'list_attente'; // Nom de la table
+    protected $table = 'list_attente';
 
     protected $fillable = [
         'user_id',
         'position',
     ];
 
-    // Relation avec l'utilisateur
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

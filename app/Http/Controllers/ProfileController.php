@@ -2,59 +2,50 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ProfileUpdateRequest;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\View\View;
+use App\Models\HistoriqueAttribution;
+use App\Models\ListAttente;
+use App\Models\Parking;
+use Illuminate\Support\Facades\Hash;
 
 class ProfileController extends Controller
 {
     /**
-     * Display the user's profile form.
+     * Afficher le tableau de bord utilisateur.
      */
-    public function edit(Request $request): View
+    public function index()
     {
-        return view('profile.edit', [
-            'user' => $request->user(),
-        ]);
+        $user = auth()->user();
+
+        // Récupérer les informations nécessaires
+        $attributions = HistoriqueAttribution::where('user_id', $user->id)
+            ->with('parking')
+            ->orderBy('date_attribution', 'desc')
+            ->get();
+        $position = ListAttente::where('user_id', $user->id)->value('position');
+        $parkingLibre = Parking::where('est_occupe', false)->exists();
+
+        return view('dashboard', compact('user', 'attributions', 'position', 'parkingLibre'));
     }
 
     /**
-     * Update the user's profile information.
+     * Mettre à jour le mot de passe de l'utilisateur.
      */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
+    public function updatePassword(Request $request)
     {
-        $request->user()->fill($request->validated());
+        $request->validate([
+            'current_password' => 'required',
+            'new_password' => 'required|min:6|confirmed',
+        ]);
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        $user = auth()->user();
+
+        if (!Hash::check($request->current_password, $user->password)) {
+            return back()->with('error', 'Mot de passe actuel incorrect.');
         }
 
-        $request->user()->save();
+        $user->update(['password' => Hash::make($request->new_password)]);
 
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
-    }
-
-    /**
-     * Delete the user's account.
-     */
-    public function destroy(Request $request): RedirectResponse
-    {
-        $request->validateWithBag('userDeletion', [
-            'password' => ['required', 'current_password'],
-        ]);
-
-        $user = $request->user();
-
-        Auth::logout();
-
-        $user->delete();
-
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return Redirect::to('/');
+        return back()->with('success', 'Mot de passe mis à jour avec succès.');
     }
 }

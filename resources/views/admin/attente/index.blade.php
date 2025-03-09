@@ -17,7 +17,9 @@
             <tbody>
                 @foreach($attentes as $attente)
                     <tr class="text-center border-b border-gray-200">
-                        <td class="px-4 py-2">{{ $attente->user->name }}</td>
+                        <td class="px-4 py-2">
+                            {{ $attente->user ? $attente->user->name : 'Utilisateur introuvable' }}
+                        </td>
                         <td class="px-4 py-2">
                             <form action="{{ route('attente.updatePosition', $attente->id) }}" method="POST">
                                 @csrf
@@ -29,7 +31,8 @@
                             </form>
                         </td>
                         <td class="px-4 py-2">
-                            <form action="{{ route('attente.destroy', $attente->id) }}" method="POST" onsubmit="return confirm('Supprimer cet utilisateur de la liste d\'attente ?');">
+                            <form action="{{ route('attente.destroy', $attente->id) }}" method="POST"
+                                onsubmit="return confirm('Supprimer cet utilisateur de la liste d\'attente ?');">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="text-red-600 hover:text-red-900">
