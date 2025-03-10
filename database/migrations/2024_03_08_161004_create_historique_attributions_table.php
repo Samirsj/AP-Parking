@@ -11,12 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('historiques', function (Blueprint $table) {
+        Schema::create('historique_attributions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('parking_id')->constrained()->onDelete('cascade');
-            $table->string('action');
-            $table->timestamp('date_action')->nullable();
+            $table->foreignId('parking_id')->constrained('parking')->onDelete('cascade');
+            $table->timestamp('date_attribution')->useCurrent();
             $table->timestamps();
         });
     }
@@ -26,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('historiques');
+        Schema::dropIfExists('historique_attributions');
     }
 }; 

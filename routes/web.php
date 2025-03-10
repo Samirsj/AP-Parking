@@ -9,6 +9,7 @@ use App\Http\Controllers\HistoriqueController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\MainController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,6 +33,20 @@ Route::middleware(['auth'])->group(function () {
 
 // 📌 **Routes nécessitant une authentification**
 Route::middleware(['auth'])->group(function () {
+    // Routes pour les utilisateurs
+    Route::resource('users', UserController::class);
+    
+    // Routes pour le parking
+    Route::resource('parking', ParkingController::class);
+    
+    // Routes pour les réservations
+    Route::resource('reservations', ReservationController::class);
+    
+    // Routes pour l'historique
+    Route::resource('historiques', HistoriqueController::class);
+    
+    // Routes pour l'attente
+    Route::resource('attente', AttenteController::class);
 
     // Gestion du profil utilisateur
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -43,11 +58,16 @@ Route::middleware(['auth'])->group(function () {
         ->middleware('can:viewAny,App\Models\User');
 
     // 🚗 **Gestion des places de parking (Admin uniquement)**
-    Route::resource('parking', ParkingController::class)
-        ->middleware('can:viewAny,App\Models\Parking');
+    Route::post('/parking/{parking}/occuper', [ParkingController::class, 'marquerOccupee'])->name('parking.occuper');
+    Route::post('/parking/{parking}/liberer', [ParkingController::class, 'marquerLibre'])->name('parking.liberer');
+    Route::post('/parking/{parking}/maintenance', [ParkingController::class, 'maintenance'])
+        ->name('parking.maintenance');
+    Route::post('/parking/{parking}/finir-maintenance', [ParkingController::class, 'finirMaintenance'])
+        ->name('parking.finir-maintenance');
+    Route::get('/parking/statistiques', [ParkingController::class, 'statistiques'])
+        ->name('parking.statistiques');
 
     // ⏳ **Gestion de la liste d'attente**
-    Route::resource('attente', AttenteController::class);
     Route::post('/attente/{id}/update-position', [AttenteController::class, 'updatePosition'])
         ->name('attente.updatePosition');
 

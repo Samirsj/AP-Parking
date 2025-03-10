@@ -16,7 +16,6 @@ class ParkingController extends Controller
         return view('admin.parking.index', compact('places'));
     }
 
-
     /**
      * Affiche le formulaire pour ajouter une nouvelle place.
      */
@@ -32,10 +31,12 @@ class ParkingController extends Controller
     {
         $request->validate([
             'numero_place' => 'required|unique:parking|integer',
+            'notes' => 'nullable|string|max:500',
         ]);
 
         Parking::create([
             'numero_place' => $request->numero_place,
+            'notes' => $request->notes,
             'est_occupe' => false,
         ]);
 
@@ -57,11 +58,12 @@ class ParkingController extends Controller
     {
         $request->validate([
             'numero_place' => 'required|integer|unique:parking,numero_place,' . $parking->id,
+            'notes' => 'nullable|string|max:500',
         ]);
 
         $parking->update([
             'numero_place' => $request->numero_place,
-            'est_occupe' => $request->has('est_occupe'),
+            'notes' => $request->notes,
         ]);
 
         return redirect()->route('parking.index')->with('success', 'Place mise à jour avec succès.');
@@ -74,5 +76,23 @@ class ParkingController extends Controller
     {
         $parking->delete();
         return redirect()->route('parking.index')->with('success', 'Place supprimée avec succès.');
+    }
+
+    /**
+     * Marque une place comme occupée
+     */
+    public function marquerOccupee(Parking $parking)
+    {
+        $parking->marquerOccupee();
+        return redirect()->route('parking.index')->with('success', 'Place marquée comme occupée.');
+    }
+
+    /**
+     * Marque une place comme libre
+     */
+    public function marquerLibre(Parking $parking)
+    {
+        $parking->marquerLibre();
+        return redirect()->route('parking.index')->with('success', 'Place marquée comme libre.');
     }
 }

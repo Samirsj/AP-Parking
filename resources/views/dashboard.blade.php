@@ -4,7 +4,14 @@
     <div class="container mx-auto px-6 py-8">
         <!-- En-tête du tableau de bord -->
         <div class="mb-8">
-            <h1 class="text-3xl font-bold text-gray-800">Tableau de bord</h1>
+            <div class="flex justify-between items-center mb-4">
+                <h1 class="text-3xl font-bold text-gray-800">Tableau de bord</h1>
+                @if(Auth::user()->isAdmin())
+                    <div class="bg-blue-100 text-blue-800 px-4 py-2 rounded-lg text-sm font-medium">
+                        Connecté en tant qu'administrateur
+                    </div>
+                @endif
+            </div>
             <br>
             <div class="mt-4 bg-white p-6 rounded-lg shadow-sm border-l-4 border-blue-500">
                 <h2 class="text-lg font-semibold text-gray-700 mb-2">Bienvenue sur votre espace parking</h2>
@@ -132,20 +139,20 @@
                                             Demander une place
                                         </button>
                                     </form>
+                                @else
+                                    <form action="{{ route('attente.store') }}" method="POST">
+                                        @csrf
+                                        <button type="submit" 
+                                            class="w-full px-4 py-3 rounded-md font-bold text-white bg-yellow-500 hover:bg-yellow-600
+                                                   transition duration-200 ease-in-out transform hover:-translate-y-1 flex items-center justify-center">
+                                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                            </svg>
+                                            Rejoindre la file d'attente
+                                        </button>
+                                    </form>
                                 @endif
-
-                                <form action="{{ route('attente.store') }}" method="POST">
-                                    @csrf
-                                    <button type="submit" 
-                                        class="w-full px-4 py-3 rounded-md font-bold text-white {{ $parkingLibre ? 'bg-gray-500 hover:bg-gray-600' : 'bg-yellow-500 hover:bg-yellow-600' }}
-                                               transition duration-200 ease-in-out transform hover:-translate-y-1 flex items-center justify-center">
-                                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                                        </svg>
-                                        Rejoindre la file d'attente
-                                    </button>
-                                </form>
                             </div>
                         </div>
                     @endif
