@@ -11,15 +11,29 @@
                 </div>
 
                 <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Tableau de Bord') }}
                     </x-nav-link>
 
-                    <!-- Gestion des utilisateurs -->
-                    <x-nav-link :href="route('admin.index')" :active="request()->routeIs('admin.*')">
-                        {{ __('Gestion des utilisateurs') }}
-                    </x-nav-link>
+                    <!-- Liens administrateur -->
+                    @if(Auth::user()->isAdmin())
+                        <x-nav-link :href="route('admin.index')" :active="request()->routeIs('admin.*')">
+                            {{ __('Gestion Utilisateurs') }}
+                        </x-nav-link>
+
+                        <x-nav-link :href="route('parking.index')" :active="request()->routeIs('parking.*')">
+                            {{ __('Places de Parking') }}
+                        </x-nav-link>
+                        
+                        <x-nav-link :href="route('attente.index')" :active="request()->routeIs('attente.*')">
+                            {{ __('Liste d\'Attente') }}
+                        </x-nav-link>
+                        
+                        <x-nav-link :href="route('historique.index')" :active="request()->routeIs('historique.*')">
+                            {{ __('Historique') }}
+                        </x-nav-link>
+                    @endif
                 </div>
             </div>
 
@@ -73,13 +87,27 @@
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                {{ __('Dashboard') }}
+                {{ __('Tableau de Bord') }}
             </x-responsive-nav-link>
 
-            <!-- Gestion des utilisateurs (Mobile) -->
-            <x-responsive-nav-link :href="route('admin.index')" :active="request()->routeIs('admin.*')">
-                {{ __('Gestion des utilisateurs') }}
-            </x-responsive-nav-link>
+            <!-- Liens administrateur (Mobile) -->
+            @if(Auth::user()->isAdmin())
+                <x-responsive-nav-link :href="route('admin.index')" :active="request()->routeIs('admin.*')">
+                    {{ __('Gestion Utilisateurs') }}
+                </x-responsive-nav-link>
+
+                <x-responsive-nav-link :href="route('parking.index')" :active="request()->routeIs('parking.*')">
+                    {{ __('Places de Parking') }}
+                </x-responsive-nav-link>
+                
+                <x-responsive-nav-link :href="route('attente.index')" :active="request()->routeIs('attente.*')">
+                    {{ __('Liste d\'Attente') }}
+                </x-responsive-nav-link>
+                
+                <x-responsive-nav-link :href="route('historique.index')" :active="request()->routeIs('historique.*')">
+                    {{ __('Historique') }}
+                </x-responsive-nav-link>
+            @endif
         </div>
 
         <!-- Responsive Settings Options -->

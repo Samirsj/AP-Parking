@@ -8,6 +8,7 @@ use App\Http\Controllers\AttenteController;
 use App\Http\Controllers\HistoriqueController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\ReservationController;
+use App\Http\Controllers\MainController;
 
 /*
 |--------------------------------------------------------------------------
