@@ -4,6 +4,7 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use App\Models\HistoriqueAttribution;
 
 class Kernel extends ConsoleKernel
 {
@@ -19,7 +20,7 @@ class Kernel extends ConsoleKernel
                 // Libère la place de parking
                 $parking = $reservation->parking;
                 if ($parking) {
-                    $parking->update(['est_occupe' => false]);
+                    $parking->marquerLibre();
                 }
     
                 // Supprime la réservation expirée

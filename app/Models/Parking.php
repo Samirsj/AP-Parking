@@ -13,13 +13,8 @@ class Parking extends Model
 
     protected $fillable = [
         'numero_place',
-        'est_occupe',
         'notes',
         'user_id'
-    ];
-
-    protected $casts = [
-        'est_occupe' => 'boolean'
     ];
 
     /**
@@ -35,16 +30,16 @@ class Parking extends Model
      */
     public function estDisponible()
     {
-        return !$this->est_occupe;
+        return is_null($this->user_id);
     }
 
     /**
      * Marque la place comme occupée
      */
-    public function marquerOccupee()
+    public function marquerOccupee($userId)
     {
         $this->update([
-            'est_occupe' => true
+            'user_id' => $userId
         ]);
     }
 
@@ -54,7 +49,6 @@ class Parking extends Model
     public function marquerLibre()
     {
         $this->update([
-            'est_occupe' => false,
             'user_id' => null
         ]);
     }

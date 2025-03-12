@@ -36,8 +36,7 @@ class ParkingController extends Controller
 
         Parking::create([
             'numero_place' => $request->numero_place,
-            'notes' => $request->notes,
-            'est_occupe' => false,
+            'notes' => $request->notes
         ]);
 
         return redirect()->route('parking.index')->with('success', 'Place ajoutée avec succès.');
@@ -83,7 +82,7 @@ class ParkingController extends Controller
      */
     public function marquerOccupee(Parking $parking)
     {
-        $parking->marquerOccupee();
+        $parking->marquerOccupee(auth()->id());
         return redirect()->route('parking.index')->with('success', 'Place marquée comme occupée.');
     }
 

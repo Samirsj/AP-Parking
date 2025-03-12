@@ -60,12 +60,6 @@ Route::middleware(['auth'])->group(function () {
     // 🚗 **Gestion des places de parking (Admin uniquement)**
     Route::post('/parking/{parking}/occuper', [ParkingController::class, 'marquerOccupee'])->name('parking.occuper');
     Route::post('/parking/{parking}/liberer', [ParkingController::class, 'marquerLibre'])->name('parking.liberer');
-    Route::post('/parking/{parking}/maintenance', [ParkingController::class, 'maintenance'])
-        ->name('parking.maintenance');
-    Route::post('/parking/{parking}/finir-maintenance', [ParkingController::class, 'finirMaintenance'])
-        ->name('parking.finir-maintenance');
-    Route::get('/parking/statistiques', [ParkingController::class, 'statistiques'])
-        ->name('parking.statistiques');
 
     // ⏳ **Gestion de la liste d'attente**
     Route::post('/attente/{id}/update-position', [AttenteController::class, 'updatePosition'])
