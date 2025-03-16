@@ -14,6 +14,7 @@ return new class extends Migration {
             $table->integer('numero_place')->unique();
             $table->boolean('est_occupe')->default(false);
             $table->text('notes')->nullable();
+            $table->foreignId('user_id')->nullable()->constrained()->onDelete('set null'); // Ajout direct de user_id
             $table->timestamps();
         });
     }
@@ -25,9 +26,5 @@ return new class extends Migration {
         Schema::dropIfExists('parking');
     }
 };
-
-    
-    
-    
 
     
