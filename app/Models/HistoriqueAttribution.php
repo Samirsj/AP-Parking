@@ -9,7 +9,7 @@ class HistoriqueAttribution extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'parking_id', 'date_attribution'];
+    protected $fillable = ['user_id', 'parking_id', 'date_attribution', 'expiration_at'];
 
     public function user()
     {

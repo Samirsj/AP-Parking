@@ -70,6 +70,7 @@ Route::middleware(['auth'])->group(function () {
 
     // 📅 **Gestion des réservations**
     Route::post('/reservation', [ReservationController::class, 'store'])->name('reservation.store');
+    Route::post('/reservation/cancel', [ReservationController::class, 'cancel'])->name('reservation.cancel');
 });
 
 // 🔑 **Routes pour l'inscription**

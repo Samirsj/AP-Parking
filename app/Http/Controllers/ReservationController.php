@@ -46,6 +46,31 @@ class ReservationController extends Controller
             return redirect()->route('dashboard')->with('info', 'Aucune place disponible. Vous avez été ajouté à la file d\'attente.');
         }
     }
+
+    /**
+     * Annuler une réservation de place de parking
+     */
+    public function cancel()
+    {
+        $user = Auth::user();
+        
+        // Récupérer la place de parking attribuée à l'utilisateur
+        $parking = Parking::where('user_id', $user->id)->first();
+        
+        if ($parking) {
+            // Libérer la place
+            $parking->marquerLibre();
+            
+            // Ajouter une entrée dans l'historique pour indiquer l'annulation
+            HistoriqueAttribution::where('user_id', $user->id)
+                ->whereNull('expiration_at')
+                ->update(['expiration_at' => now()]);
+            
+            return redirect()->route('dashboard')->with('success', 'Votre réservation a été annulée avec succès.');
+        }
+        
+        return redirect()->route('dashboard')->with('error', 'Aucune réservation active trouvée.');
+    }
 }
 
 

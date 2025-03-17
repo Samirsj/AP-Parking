@@ -27,7 +27,7 @@ class HistoriqueController extends Controller
     public function create()
     {
         $users = User::all();
-        $parkings = Parking::where('est_occupe', false)->get(); // On prend uniquement les places libres
+        $parkings = Parking::whereNull('user_id')->get(); // On prend uniquement les places libres
 
         return view('admin.historique.create', compact('users', 'parkings'));
     }
@@ -52,8 +52,7 @@ class HistoriqueController extends Controller
 
         // Marquer la place de parking comme occupée
         $parking = Parking::findOrFail($request->parking_id);
-        $parking->est_occupe = true;
-        $parking->save();
+        $parking->marquerOccupee($request->user_id);
 
         return redirect()->route('historique.index')->with('success', 'Attribution enregistrée avec succès.');
     }

@@ -50,17 +50,6 @@
                         @enderror
                     </div>
 
-                    <!-- Rôle Admin -->
-                    <div class="mb-6">
-                        <label class="inline-flex items-center">
-                            <input type="checkbox" 
-                                   name="admin" 
-                                   class="rounded border-gray-300 text-blue-600 shadow-sm focus:ring-blue-500" 
-                                   {{ $user->admin ? 'checked' : '' }}>
-                            <span class="ml-2 text-sm text-gray-600">Administrateur</span>
-                        </label>
-                    </div>
-
                     <!-- Boutons -->
                     <div class="flex justify-between">
                         <a href="{{ route('admin.index') }}" 

@@ -17,35 +17,23 @@ class ProfileController extends Controller
     {
         $user = auth()->user();
 
-        // Récupérer les informations nécessaires
+        // Récupérer les attributions actives (pour la Place Actuelle)
+        $attributionsActives = HistoriqueAttribution::where('user_id', $user->id)
+            ->whereNull('expiration_at')
+            ->with('parking')
+            ->orderBy('date_attribution', 'desc')
+            ->get();
+            
+        // Récupérer toutes les attributions pour l'historique
         $attributions = HistoriqueAttribution::where('user_id', $user->id)
             ->with('parking')
             ->orderBy('date_attribution', 'desc')
             ->get();
+            
         $position = ListAttente::where('user_id', $user->id)->value('position');
-        $parkingLibre = Parking::where('est_occupe', false)->exists();
+        $parkingLibre = Parking::whereNull('user_id')->exists();
 
-        return view('dashboard', compact('user', 'attributions', 'position', 'parkingLibre'));
+        return view('dashboard', compact('user', 'attributions', 'attributionsActives', 'position', 'parkingLibre'));
     }
 
-    /**
-     * Mettre à jour le mot de passe de l'utilisateur.
-     */
-    public function updatePassword(Request $request)
-    {
-        $request->validate([
-            'current_password' => 'required',
-            'new_password' => 'required|min:6|confirmed',
-        ]);
-
-        $user = auth()->user();
-
-        if (!Hash::check($request->current_password, $user->password)) {
-            return back()->with('error', 'Mot de passe actuel incorrect.');
-        }
-
-        $user->update(['password' => Hash::make($request->new_password)]);
-
-        return back()->with('success', 'Mot de passe mis à jour avec succès.');
-    }
 }

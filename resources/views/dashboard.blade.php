@@ -41,10 +41,24 @@
                     Place Actuelle
                 </h2>
                 <div class="mt-2">
-                    @if($attributions->isNotEmpty())
+                    @if($attributionsActives->isNotEmpty())
                         <div class="bg-blue-50 p-4 rounded-lg">
-                            <p class="text-lg font-bold text-blue-700">Place N° {{ $attributions->first()->parking->numero_place }}</p>
-                            <p class="text-sm text-gray-600">Attribuée depuis le {{ \Carbon\Carbon::parse($attributions->first()->date_attribution)->format('d/m/Y') }}</p>
+                            <p class="text-lg font-bold text-blue-700">Place N° {{ $attributionsActives->first()->parking->numero_place }}</p>
+                            <p class="text-sm text-gray-600">Attribuée depuis le {{ \Carbon\Carbon::parse($attributionsActives->first()->date_attribution)->format('d/m/Y') }}</p>
+                            
+                            <div class="mt-4">
+                                <form action="{{ route('reservation.cancel') }}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir annuler votre réservation ?');">
+                                    @csrf
+                                    <button type="submit" 
+                                        class="w-full px-4 py-2 rounded-md font-medium text-white bg-red-500 hover:bg-red-600 
+                                               transition duration-200 ease-in-out flex items-center justify-center">
+                                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                        </svg>
+                                        Annuler la réservation
+                                    </button>
+                                </form>
+                            </div>
                         </div>
                     @else
                         <div class="bg-gray-50 p-4 rounded-lg">
@@ -69,6 +83,15 @@
                                 <span class="font-semibold">Place N° {{ $attribution->parking->numero_place }}</span>
                                 <span class="text-sm text-gray-500">{{ \Carbon\Carbon::parse($attribution->date_attribution)->format('d/m/Y') }}</span>
                             </div>
+                            @if($attribution->expiration_at)
+                                <div class="mt-1 text-xs text-gray-500">
+                                    Annulée le {{ \Carbon\Carbon::parse($attribution->expiration_at)->format('d/m/Y') }}
+                                </div>
+                            @else
+                                <div class="mt-1 text-xs text-green-600">
+                                    Réservation active
+                                </div>
+                            @endif
                         </div>
                     @empty
                         <p class="text-gray-600">Aucun historique disponible</p>
@@ -108,7 +131,7 @@
                     Actions Disponibles
                 </h2>
                 <div class="mt-2">
-                    @if($attributions->isNotEmpty())
+                    @if($attributionsActives->isNotEmpty())
                         <div class="bg-blue-50 p-4 rounded-lg text-center">
                             <p class="text-blue-700">Place déjà attribuée</p>
                         </div>
