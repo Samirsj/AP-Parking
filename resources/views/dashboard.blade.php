@@ -71,9 +71,7 @@
             <!-- Historique -->
             <div class="bg-white shadow-lg rounded-lg p-6 border-l-4 border-green-500">
                 <h2 class="text-xl font-semibold text-gray-700 mb-4 flex items-center">
-                    <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                    </svg>
+                    
                     Historique des Places
                 </h2>
                 <div class="max-h-60 overflow-y-auto">
