@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -70,30 +71,25 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
+        // Règles de validation
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $user->id],
-            'admin' => ['boolean'],
         ]);
 
-        $user->update([
+        $updateData = [
             'name' => $request->name,
             'email' => $request->email,
-            'admin' => $request->admin ?? false,
-        ]);
+            'admin' => $request->has('admin') ? 1 : 0,
+        ];
 
-        if ($request->filled('password')) {
-            $request->validate([
-                'password' => ['required', 'confirmed', Password::defaults()],
-            ]);
-
-            $user->update([
-                'password' => Hash::make($request->password)
-            ]);
+        try {
+            $user->update($updateData);
+            return redirect()->route('admin.index')->with('success', 'Utilisateur mis à jour avec succès.');
+        } catch (\Exception $e) {
+            \Log::error('Erreur lors de la mise à jour de l\'utilisateur: ' . $e->getMessage());
+            return back()->withErrors(['error' => 'Une erreur est survenue lors de la mise à jour. Veuillez réessayer.'])->withInput();
         }
-
-        return redirect()->route('users.index')
-            ->with('success', 'Utilisateur mis à jour avec succès.');
     }
 
     /**
@@ -103,7 +99,7 @@ class UserController extends Controller
     {
         $user->delete();
 
-        return redirect()->route('users.index')
+        return redirect()->route('admin.index')
             ->with('success', 'Utilisateur supprimé avec succès.');
     }
 } 

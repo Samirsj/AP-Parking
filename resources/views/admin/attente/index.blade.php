@@ -56,11 +56,10 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                     <div class="flex items-center justify-end space-x-3">
-                                        <form method="POST" action="{{ route('attente.update', $attente->id) }}" class="flex items-center">
+                                        <form method="POST" action="{{ route('attente.updatePosition', $attente->id) }}" class="flex items-center">
                                             @csrf
-                                            @method('PATCH')
                                             <input type="number" 
-                                                   name="position" 
+                                                   name="new_position" 
                                                    value="{{ $attente->position }}" 
                                                    class="w-16 px-2 py-1 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                                    min="1">

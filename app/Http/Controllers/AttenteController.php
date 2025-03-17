@@ -6,13 +6,14 @@ use Illuminate\Http\Request;
 use App\Models\ListAttente;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth; 
+use Illuminate\Support\Facades\DB;
 
 
 
 class AttenteController extends Controller
 {
     /**
-     * Afficher la liste d’attente.
+     * Afficher la liste d'attente.
      */
     public function index()
     {
@@ -22,7 +23,7 @@ class AttenteController extends Controller
     
 
     /**
-     * Afficher le formulaire pour ajouter un utilisateur à la liste d’attente.
+     * Afficher le formulaire pour ajouter un utilisateur à la liste d'attente.
      */
     public function create()
     {
@@ -37,7 +38,7 @@ class AttenteController extends Controller
 
 
         /**
-         * Ajouter un utilisateur à la liste d’attente si aucune place n'est dispo.
+         * Ajouter un utilisateur à la liste d'attente si aucune place n'est dispo.
          */
         public function store(Request $request)
         {
@@ -63,7 +64,7 @@ class AttenteController extends Controller
     
 
     /**
-     * Supprimer un utilisateur de la liste d’attente et réorganiser les positions.
+     * Supprimer un utilisateur de la liste d'attente et réorganiser les positions.
      */
     public function destroy($id)
     {
@@ -77,7 +78,7 @@ class AttenteController extends Controller
     }
 
     /**
-     * Modifier la position d’un utilisateur dans la liste d’attente.
+     * Modifier la position d'un utilisateur dans la liste d'attente.
      */
     public function updatePosition(Request $request, $id)
     {
@@ -94,17 +95,26 @@ class AttenteController extends Controller
             return redirect()->back()->with('error', 'Position invalide.');
         }
 
-        if ($oldPosition != $newPosition) {
+        DB::transaction(function () use ($attente, $newPosition, $oldPosition) {
+            // Utiliser une position temporaire très grande pour éviter les conflits
+            $tempPosition = ListAttente::max('position') + 1000;
+            
+            // Déplacer d'abord l'élément à une position temporaire
+            $attente->update(['position' => $tempPosition]);
+
             if ($newPosition > $oldPosition) {
+                // Si on déplace vers le bas, on décrémente les positions entre l'ancienne et la nouvelle
                 ListAttente::whereBetween('position', [$oldPosition + 1, $newPosition])
                     ->decrement('position');
             } else {
+                // Si on déplace vers le haut, on incrémente les positions entre la nouvelle et l'ancienne
                 ListAttente::whereBetween('position', [$newPosition, $oldPosition - 1])
                     ->increment('position');
             }
 
+            // Finalement, mettre à jour la position finale
             $attente->update(['position' => $newPosition]);
-        }
+        });
 
         return redirect()->route('attente.index')->with('success', 'Position mise à jour avec succès.');
     }
