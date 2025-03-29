@@ -66,9 +66,6 @@ Route::middleware(['auth'])->group(function () {
     // **Gestion de la liste d'attente**
     Route::post('/attente/{id}/update-position', [AttenteController::class, 'updatePosition'])
         ->name('attente.updatePosition');
-    Route::post('/attente/attribuer-place', [AttenteController::class, 'attribuerPlacePremier'])
-        ->name('attente.attribuer-place')
-        ->middleware('can:viewAny,App\Models\User');
 
     // **Gestion de l'historique des attributions**
     Route::resource('historique', HistoriqueController::class);
