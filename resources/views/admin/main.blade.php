@@ -114,9 +114,4 @@
     @endif
 </div>
 
-@push('scripts')
-<script>
-    // Votre code JavaScript ici
-</script>
-@endpush
 @endsection 

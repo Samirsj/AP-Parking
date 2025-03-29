@@ -15,12 +15,11 @@ class DatabaseSeeder extends Seeder
             User::create([
                 'name' => 'teste',
                 'email' => 't@t',
-                'password' => Hash::make('a'), // Mot de passe sécurisé
+                'password' => Hash::make('a'), 
                 'admin' => 1,
             ]);
         }
 
-        // ✅ Génére 10 utilisateurs aléatoires
         User::factory(10)->create();
     }
 }

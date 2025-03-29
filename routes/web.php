@@ -25,13 +25,13 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-// 🏠 **Dashboard sécurisé (utilisateur connecté obligatoire)**
+//  **Dashboard sécurisé (utilisateur connecté obligatoire)**
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [ProfileController::class, 'index'])->name('dashboard'); // ✅ Correction du nom
     Route::post('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.updatePassword');
 });
 
-// 📌 **Routes nécessitant une authentification**
+//  **Routes nécessitant une authentification**
 Route::middleware(['auth'])->group(function () {
     // Routes pour les utilisateurs
     Route::resource('users', UserController::class);
@@ -54,29 +54,29 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::put('/password', [ProfileController::class, 'updatePassword'])->name('password.update');
 
-    // 🔒 **Gestion des utilisateurs (Admin uniquement)**
+    // **Gestion des utilisateurs (Admin uniquement)**
     Route::resource('admin', AdminController::class)
         ->middleware('can:viewAny,App\Models\User');
 
-    // 🚗 **Gestion des places de parking (Admin uniquement)**
+    // **Gestion des places de parking (Admin uniquement)**
     Route::post('/parking/{parking}/occuper', [ParkingController::class, 'marquerOccupee'])->name('parking.occuper');
     Route::post('/parking/{parking}/liberer', [ParkingController::class, 'marquerLibre'])->name('parking.liberer');
+    Route::post('/admin/attribuer-place', [AdminController::class, 'attribuerPlaceAutomatiquement'])->name('admin.attribuer-place');
 
-    // ⏳ **Gestion de la liste d'attente**
+    // **Gestion de la liste d'attente**
     Route::post('/attente/{id}/update-position', [AttenteController::class, 'updatePosition'])
         ->name('attente.updatePosition');
 
-    // 🏷️ **Gestion de l'historique des attributions**
+    // **Gestion de l'historique des attributions**
     Route::resource('historique', HistoriqueController::class);
 
-    // 📅 **Gestion des réservations**
+    // **Gestion des réservations**
     Route::post('/reservation', [ReservationController::class, 'store'])->name('reservation.store');
     Route::post('/reservation/cancel', [ReservationController::class, 'cancel'])->name('reservation.cancel');
 });
 
-// 🔑 **Routes pour l'inscription**
+// **Routes pour l'inscription**
 Route::get('/register', [RegisteredUserController::class, 'create'])->name('register');
 Route::post('/register', [RegisteredUserController::class, 'store']);
-
-// 🔒 **Routes d'authentification (login, logout, reset password, etc.)**
+// **Routes d'authentification (login, logout, reset password, etc.)**
 require __DIR__.'/auth.php';

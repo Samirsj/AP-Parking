@@ -14,13 +14,7 @@
                         <h2 class="text-xl font-semibold text-gray-800">Demandes en attente</h2>
                         <p class="text-sm text-gray-600 mt-1">Liste des utilisateurs en attente d'une place de parking</p>
                     </div>
-                    <a href="{{ route('attente.create') }}" 
-                       class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors duration-200 flex items-center">
-                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
-                        </svg>
-                        Ajouter une demande
-                    </a>
+ 
                 </div>
             </div>
 
@@ -89,9 +83,6 @@
 
             @if($attentes->isEmpty())
                 <div class="text-center py-8">
-                    <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                    </svg>
                     <h3 class="mt-2 text-sm font-medium text-gray-900">Aucune demande en attente</h3>
                     <p class="mt-1 text-sm text-gray-500">Commencez par ajouter une nouvelle demande à la liste d'attente.</p>
                 </div>

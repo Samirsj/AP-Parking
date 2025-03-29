@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('parking_id')->constrained('parking')->onDelete('cascade');
             $table->timestamp('date_attribution')->useCurrent();
-            $table->timestamp('expiration_at')->nullable(); // Ajout de expiration_at
+            $table->timestamp('expiration_at')->nullable(); 
             $table->timestamps();
         });
     }

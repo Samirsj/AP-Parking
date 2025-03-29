@@ -106,7 +106,6 @@
                         <div class="bg-yellow-50 p-4 rounded-lg text-center">
                             <p class="text-2xl font-bold text-yellow-700">{{ $position }}</p>
                             <p class="text-sm text-gray-600">Position actuelle</p>
-                            <p class="text-xs text-gray-500 mt-2">Vous serez notifié dès qu'une place se libère</p>
                         </div>
                     @else
                         <div class="bg-gray-50 p-4 rounded-lg">
@@ -129,7 +128,7 @@
                         </div>
                     @elseif($position)
                         <div class="bg-yellow-50 p-4 rounded-lg text-center">
-                            <p class="text-yellow-700">Déjà en file d'attente - Position : {{ $position }}</p>
+                            <p class="text-yellow-700">Déjà en file d'attente</p>
                         </div>
                     @else
                         <div class="space-y-4">

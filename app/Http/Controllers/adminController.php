@@ -14,8 +14,8 @@ class AdminController extends Controller
     public function index()
     {
         if (Auth::user()->can('viewAny', User::class)) {
-            $users = User::paginate(10); // Ajout de la pagination
-            return view('admin.main', compact('users')); // ✅ Correction ici
+            $users = User::paginate(10); 
+            return view('admin.main', compact('users')); 
         }
         return redirect('/');
     }
