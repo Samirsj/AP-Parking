@@ -27,7 +27,7 @@ Route::get('/', function () {
 
 //  **Dashboard sécurisé (utilisateur connecté obligatoire)**
 Route::middleware(['auth'])->group(function () {
-    Route::get('/dashboard', [ProfileController::class, 'index'])->name('dashboard'); // ✅ Correction du nom
+    Route::get('/dashboard', [ProfileController::class, 'index'])->name('dashboard'); //  Correction du nom
     Route::post('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.updatePassword');
 });
 
