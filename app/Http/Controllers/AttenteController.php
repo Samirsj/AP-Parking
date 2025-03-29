@@ -42,7 +42,7 @@ class AttenteController extends Controller
          */
         public function store(Request $request)
         {
-            $user = Auth::user(); // ✅ Utilisation correcte
+            $user = Auth::user(); 
     
             // Vérifier si l'utilisateur est déjà dans la liste d'attente
             if (ListAttente::where('user_id', $user->id)->exists()) {
